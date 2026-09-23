@@ -5,6 +5,15 @@
   "main": "server.js",
   "type": "module",
   "license": "MIT",
+  "author": "Devore",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davidadevore/d80-panel.git"
+  },
+  "homepage": "https://github.com/davidadevore/d80-panel#readme",
+  "bugs": {
+    "url": "https://github.com/davidadevore/d80-panel/issues"
+  },
   "engines": {
     "node": ">=18"
   },
@@ -25,7 +34,6 @@
   ],
   "dependencies": {
     "aes70": "^2.0.20",
-    "systray2": "^2.1.4",
     "ws": "^8.21.3"
   },
   "devDependencies": {

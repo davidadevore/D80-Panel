@@ -7,7 +7,7 @@
   <key>CFBundleDisplayName</key>
   <string>D80 Panel</string>
   <key>CFBundleIdentifier</key>
-  <string>com.d80panel.app</string>
+  <string>io.github.davidadevore.d80panel</string>
   <key>CFBundleVersion</key>
   <string>__VERSION__</string>
   <key>CFBundleShortVersionString</key>

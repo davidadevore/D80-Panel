@@ -135,6 +135,13 @@ rmdir "$MOUNT_DIR"
 hdiutil convert "$RW_DMG" -format UDZO -ov -o "$DMG_PATH"
 rm -f "$RW_DMG"
 
+if [ -n "${CODESIGN_IDENTITY:-}" ]; then
+  # The disk image itself needs a signature too, not just the app inside it —
+  # `spctl --assess --type open` reports the DMG as "no usable signature"
+  # otherwise, even with a valid notarization ticket stapled on.
+  codesign --force --sign "$CODESIGN_IDENTITY" --timestamp "$DMG_PATH"
+fi
+
 if [ -n "${NOTARY_PROFILE:-}" ] || [ -n "${NOTARY_KEY_PATH:-}" ]; then
   echo "==> Submitting for notarization (this can take a few minutes)"
   if [ -n "${NOTARY_PROFILE:-}" ]; then

@@ -86,6 +86,7 @@
   .tile .dot.ok { background: var(--ok); box-shadow: 0 0 5px var(--ok); }
   .tile .dot.warn { background: var(--warn); box-shadow: 0 0 5px var(--warn); }
   .tile .dot.bad { background: var(--bad); box-shadow: 0 0 6px var(--bad); animation: pulse 1s infinite; }
+  .tile .dot.muted { background: transparent; border: 1.5px solid var(--muted); }
   .tile .id { font-weight: 700; font-size: 13px; }
   .tile.error-bg { background: rgba(255, 59, 59, 0.22); border-color: var(--bad); }
 
@@ -119,7 +120,12 @@
   .meter-row:active { background: #1a1e25; }
   .meter-amp-id { font-weight: 700; font-size: 10px; width: 36px; flex-shrink: 0; }
   .meter-channels { display: flex; gap: 3px; }
-  .seg-meter { display: flex; flex-direction: column-reverse; gap: 1px; width: 26px; height: 40px; }
+  .seg-meter { position: relative; display: flex; flex-direction: column-reverse; gap: 1px; width: 26px; height: 40px; }
+  .seg-meter.muted .seg { opacity: 0.22; }
+  .seg-meter.muted::after {
+    content: 'M'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800; color: var(--text); opacity: 0.85;
+  }
   .seg-meter .seg { flex: 1; border-radius: 1px; background: #20242b; }
   .seg-meter .seg.green { background: var(--ok); }
   .seg-meter .seg.yellow { background: var(--warn); }
@@ -156,11 +162,15 @@
   }
   .muted-badge { font-size: 11px; color: var(--bad); opacity: 0.5; }
 
+  .ch.is-muted .meter-fill { opacity: 0.25; }
   .ch { padding: 10px 14px; border-bottom: 1px solid var(--border); }
   .ch:last-child { border-bottom: none; }
   .ch-row1 { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
   .ch-name { font-weight: 600; font-size: 14px; }
-  .ch-name .muted-tag { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 6px; }
+  .ch-name .muted-tag {
+    color: var(--text); background: #2a2f38; border: 1px solid var(--border); border-radius: 6px;
+    font-weight: 700; font-size: 10px; letter-spacing: 0.05em; padding: 2px 6px; margin-left: 8px; vertical-align: middle;
+  }
   .flags { display: flex; gap: 6px; }
   .flag {
     font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;
@@ -258,10 +268,15 @@ function shortId(amp) {
 // needs both unmuted AND a connected speaker load, and the amp's own ISP
 // flag only trips above -30dBu — real program material was sitting at
 // -32..-38dBu on this rig, audibly present but below that threshold.
+// Muted renders as a distinct hollow ring rather than any of those colors
+// — otherwise a muted channel with real input signal upstream would still
+// show green, which reads as "active" when nothing's actually coming out.
+// Overload still wins over muted: a real fault is worth flagging either way.
 const SIGNAL_THRESHOLD_DBU = -50;
 function channelDotClass(ch, connected) {
   if (!connected) return 'off';
   if (ch.overload || ch.inputOverload || ch.outputOverload) return 'bad';
+  if (ch.muted === 'Muted') return 'muted';
   if (ch.limiting) return 'warn';
   if (ch.osp || (ch.inputLevelDbu != null && ch.inputLevelDbu > SIGNAL_THRESHOLD_DBU)) return 'ok';
   return 'off';
@@ -382,7 +397,8 @@ function segMeter(ch) {
     }
     segs += `<div class="seg ${color}${on && overload ? ' flash' : ''}"></div>`;
   }
-  return `<div class="seg-meter">${segs}</div>`;
+  const muted = !!(ch && ch.muted === 'Muted');
+  return `<div class="seg-meter${muted ? ' muted' : ''}">${segs}</div>`;
 }
 
 const METER_COLUMN_WIDTH_PX = 180; // rendered .meter-col width, incl. padding/divider
@@ -471,7 +487,7 @@ function channelCard(ch) {
   const name = ch.name && ch.name.length ? esc(ch.name) : null;
 
   return `
-    <div class="ch">
+    <div class="ch${muted ? ' is-muted' : ''}">
       <div class="ch-row1">
         <div class="ch-name">${name || 'Channel'}${muted ? '<span class="muted-tag">MUTED</span>' : ''}</div>
         <div class="flags">
