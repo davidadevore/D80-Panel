@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleName</key>
+  <string>D80 Panel</string>
+  <key>CFBundleDisplayName</key>
+  <string>D80 Panel</string>
+  <key>CFBundleIdentifier</key>
+  <string>com.d80panel.app</string>
+  <key>CFBundleVersion</key>
+  <string>__VERSION__</string>
+  <key>CFBundleShortVersionString</key>
+  <string>__VERSION__</string>
+  <key>CFBundleExecutable</key>
+  <string>D80Panel</string>
+  <key>CFBundleIconFile</key>
+  <string>icon.icns</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>LSMinimumSystemVersion</key>
+  <string>11.0</string>
+  <key>LSApplicationCategoryType</key>
+  <string>public.app-category.utilities</string>
+  <key>NSHighResolutionCapable</key>
+  <true/>
+  <!-- Menu bar app: no Dock icon, no Cmd-Tab entry. The launcher also sets
+       NSApp.setActivationPolicy(.accessory) itself, belt-and-suspenders. -->
+  <key>LSUIElement</key>
+  <true/>
+</dict>
+</plist>

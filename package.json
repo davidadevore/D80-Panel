@@ -1,0 +1,38 @@
+{
+  "name": "d80-panel",
+  "version": "0.1.0",
+  "description": "Read-only mobile/web fleet dashboard for d&b audiotechnik amplifiers (D80, D40, ...) over OCA/AES70",
+  "main": "server.js",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "print-tree": "printDevice --json",
+    "build:app": "bash build-app.sh"
+  },
+  "keywords": [
+    "d&b",
+    "dbaudio",
+    "aes70",
+    "oca",
+    "amplifier",
+    "audio",
+    "dashboard",
+    "monitoring"
+  ],
+  "dependencies": {
+    "aes70": "^2.0.20",
+    "systray2": "^2.1.4",
+    "ws": "^8.21.3"
+  },
+  "devDependencies": {
+    "@yao-pkg/pkg": "^6.22.0",
+    "esbuild": "^0.28.2"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
+}
